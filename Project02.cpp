@@ -5,20 +5,18 @@
 using namespace std;
 enum memberStatus {YA, TIDAK};
      memberStatus member_user = YA;
-struct diskon{
-    int    kode;
-    string diskonTeks;
-    float  diskon;};
-        diskon memberBiasa {231167, " (5%): ", 0.05};
-        diskon memberSetia {556297, " (20%):", 0.2};
-        diskon memberKesayanganAtmin {201023, " (99%):", 0.99};
-int   pilih, a, kuantitas, kodeDiskon;
+
+int   pilih, a, b, kuantitas, kodeDiskon;
 bool  lanjutBelanja = true;
 float totalBelanja  = 0.0;
 float totalDiskon   = 0.0;
 float totalAkhir    = 0.0;
+const int dscn      = 3;
 const int MENU      = 5;
 
+const int diskonCode    [dscn] = {231167, 556297, 201023};
+const string diskonTeks [dscn] = {" (5%): ", " (20%)", " (99%):"};
+const float diskon      [dscn] = {0.05, 0.2, 0.99};
 const int    nomorMenu  [MENU] = {1, 2, 3, 4, 5};
 const string namaMenu   [MENU] = {"Nasgor", "Telor Ceplok", "Mie Ayam", "Mie Goreng", "Mie Rebus"};
 const float  hargaMenu  [MENU] = {15000.00, 5000.00, 10000.00, 12000.00, 13000.00};
@@ -30,9 +28,7 @@ int cekAngka (string cek){
     int input;
     while (true){
         cout << cek;
-        cin >> input;
-
-        if (cin.fail()){
+        if (!(cin >> input)){
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             cout << "| INPUT TIDAK VALID!!. Silakan coba lagi\n" << endl;
@@ -93,27 +89,18 @@ int main(){
         cout << setw(23) << left  << "Total belanja awal: "
              << setw(5)  << right << "Rp. "
              << setw(13) << right << totalBelanja << endl;
-        if (member_user == YA){
-            cout << "Kode diskon: ";
-            cin >> kodeDiskon;
-            if (memberBiasa.kode == kodeDiskon){
-                totalDiskon = totalBelanja * memberBiasa.diskon;
-                cout << setw(23) << left  << ("Diskon diperoleh" + memberBiasa.diskonTeks)
-                     << setw(5)  << right << " Rp. "
-                     << setw(13) << right << totalDiskon << endl;
-            }else if(memberSetia.kode == kodeDiskon){
-                totalDiskon = totalBelanja * memberSetia.diskon;
-                cout << setw(23) << left  << ("Diskon diperoleh" + memberSetia.diskonTeks)
-                     << setw(5)  << right << " Rp. "
-                     << setw(13) << right << totalDiskon << endl;
-            }else if (memberKesayanganAtmin.kode == kodeDiskon){
-                totalDiskon = totalBelanja * memberKesayanganAtmin.diskon;
-                cout << setw(23) << left  << ("Diskon diperoleh" + memberKesayanganAtmin.diskonTeks)
-                     << setw(5)  << right << " Rp. "
-                     << setw(13) << right << totalDiskon << endl;
-            }else{
-                cout << "Diskon diperoleh:                    0.00" << endl;}
+    }
+    if (member_user == YA){
+        cout << "Kode diskon: ";
+        cin >> kodeDiskon;
+        for(b = 0; b < dscn; b++){
+            if(diskonCode[b] == kodeDiskon){
+            totalDiskon = totalBelanja * diskon[b];
+            cout << setw(23) << left  << ("Diskon diperoleh" + diskonTeks[b])
+                 << setw(5)  << right << " Rp. "
+                 << setw(13) << right << totalDiskon << endl;
         }
+    }
         totalAkhir = totalBelanja - totalDiskon;
         cout << "-----------------------------------------" << endl;
         cout << setw(23) << left  << "Total belanja akhir: "
@@ -127,4 +114,8 @@ int main(){
 
     return 0;
 }
+
+    return 0;
+}
+
 
