@@ -8,15 +8,16 @@ enum memberStatus {YA, TIDAK};
 
 int   pilih, a, b, kuantitas, kodeDiskon;
 bool  lanjutBelanja = true;
+bool  diskonBenar   = false;
 float totalBelanja  = 0.0;
 float totalDiskon   = 0.0;
 float totalAkhir    = 0.0;
 const int dscn      = 3;
 const int MENU      = 5;
 
-const int diskonCode    [dscn] = {231167, 556297, 201023};
+const int    diskonCode [dscn] = {231167, 556297, 201023};
 const string diskonTeks [dscn] = {" (5%): ", " (20%)", " (99%):"};
-const float diskon      [dscn] = {0.05, 0.2, 0.99};
+const float  diskon     [dscn] = {0.05, 0.2, 0.99};
 const int    nomorMenu  [MENU] = {1, 2, 3, 4, 5};
 const string namaMenu   [MENU] = {"Nasgor", "Telor Ceplok", "Mie Ayam", "Mie Goreng", "Mie Rebus"};
 const float  hargaMenu  [MENU] = {15000.00, 5000.00, 10000.00, 12000.00, 13000.00};
@@ -24,16 +25,16 @@ const float  hargaMenu  [MENU] = {15000.00, 5000.00, 10000.00, 12000.00, 13000.0
 void pilihan (int *num){
      *num = *num - 1;}
 
-int cekAngka (string cek){
+int cekInput (string cek, int q, int w){
     int input;
     while (true){
         cout << cek;
-        if (!(cin >> input)){
+        if (!(cin >> input) || input < q || input > w){
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin.ignore(99, '\n');
             cout << "| INPUT TIDAK VALID!!. Silakan coba lagi\n" << endl;
         }else{
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin.ignore(99, '\n');
         return input;
         }
     }
@@ -55,21 +56,15 @@ int main(){
     tampilkanMenu();
     cout << "\n| TEKAN *0* UNTUK SELESAI" << endl;
     do{
-        pilih = cekAngka("| Masukan nomor menu yang ingin dibeli: ");
+        pilih = cekInput("| Masukan nomor menu yang ingin dibeli: ", 0, MENU);
 
             if (pilih == 0){
                 break;
-            }else if (pilih > MENU || pilih < 1){
-                cout << "| NOMOR TIDAK VALID!!. Silakan coba lagi\n" << endl;
-                continue;}
+            }
 
             pilihan(&pilih);
             cout << "| Menu yang anda dipilih: " << namaMenu[pilih] << endl;
-            kuantitas = cekAngka("| Masukan jumlah/kuantitas menu yang ingin dibeli: ");
-
-            if (kuantitas < 1){
-                cout << "| NOMOR TIDAK VALID!!. Silakan coba lagi\n" << endl;
-                continue;}
+            kuantitas = cekInput("| Masukan jumlah/kuantitas menu yang ingin dibeli: ", 1, numeric_limits<int>::max());
 
         float subtotal = hargaMenu[pilih] * kuantitas;
         totalBelanja += subtotal;
@@ -89,16 +84,24 @@ int main(){
         cout << setw(23) << left  << "Total belanja awal: "
              << setw(5)  << right << "Rp. "
              << setw(13) << right << totalBelanja << endl;
-    }
-    if (member_user == YA){
-        cout << "Kode diskon: ";
-        cin >> kodeDiskon;
-        for(b = 0; b < dscn; b++){
-            if(diskonCode[b] == kodeDiskon){
-            totalDiskon = totalBelanja * diskon[b];
-            cout << setw(23) << left  << ("Diskon diperoleh" + diskonTeks[b])
+        if (member_user == YA){
+            cout << "Kode diskon: ";
+            cin >> kodeDiskon;
+            for(b = 0; b < dscn; b++){
+                if(diskonCode[b] == kodeDiskon){
+                totalDiskon = totalBelanja * diskon[b];
+                diskonBenar = true;
+                cout << setw(23) << left  << ("Diskon diperoleh" + diskonTeks[b])
+                     << setw(5)  << right << " Rp. "
+                     << setw(13) << right << totalDiskon << endl;
+                break;
+            }
+        }
+        if(!diskonBenar){
+            cout << "        --- DISKON TIDAK VALID ---\n"
+                 << setw(23) << left  << "Diskon diperoleh"
                  << setw(5)  << right << " Rp. "
-                 << setw(13) << right << totalDiskon << endl;
+                 << setw(13) << right << "0.00" << endl;
         }
     }
         totalAkhir = totalBelanja - totalDiskon;
@@ -114,8 +117,3 @@ int main(){
 
     return 0;
 }
-
-    return 0;
-}
-
-
